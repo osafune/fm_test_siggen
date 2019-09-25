@@ -5,7 +5,7 @@
 --     DATE   : 2015/11/05 -> 2015/11/11
 --            : 2015/11/11 (FIXED)
 --
---     UPDATE : 2019/09/10
+--     UPDATE : 2019/09/25
 --
 -- ===================================================================
 
@@ -234,8 +234,8 @@ architecture RTL of test_tx_top is
 	port(
 		reset		: in  std_logic;
 		clk			: in  std_logic;
-		clk_ena		: in  std_logic;	-- typ 4.096MHz
-		sam			: in  std_logic_vector(1 downto 0);		-- 00:4.0k / 01:5.3kHz / 10:8.0kHz
+		clk_ena		: in  std_logic;	-- typ 8.0MHz(X68k)
+		sam			: in  std_logic_vector(1 downto 0);		-- 00:7.8kHz / 01:10.4kHz / 10:15.6kHz
 		sync		: out std_logic;
 
 		sigsel		: in  std_logic;						-- '1':external pcm / '0':internal signal
@@ -286,13 +286,13 @@ begin
 	pll_locked(1) <= pll1_locked_sig;
 	pcmreset_sig <= not pll1_locked_sig;
 
-	process (clk_8m19_sig, pcmreset_sig) begin
-		if (pcmreset_sig = '1') then
-			ckena_4m09_reg <= '0';
-		elsif rising_edge(clk_8m19_sig) then
-			ckena_4m09_reg <= not ckena_4m09_reg;
-		end if;
-	end process;
+--	process (clk_8m19_sig, pcmreset_sig) begin
+--		if (pcmreset_sig = '1') then
+--			ckena_4m09_reg <= '0';
+--		elsif rising_edge(clk_8m19_sig) then
+--			ckena_4m09_reg <= not ckena_4m09_reg;
+--		end if;
+--	end process;
 
 
 
@@ -385,8 +385,8 @@ begin
 	U_TX6 : test_tx_i2s
 	port map(
 		reset		=> pcmreset_sig,
---		clk			=> clk_6m14_sig,		-- fs = 48kHz
-		clk			=> clk_5m64_sig,		-- fs = 44.1kHz
+--		clk			=> clk_6m14_sig,	-- fs = 48kHz
+		clk			=> clk_5m64_sig,	-- fs = 44.1kHz
 		clk_ena		=> '1',
 		sigsel		=> '0',
 		pcm_ch1		=> (others=>'0'),
@@ -399,9 +399,9 @@ begin
 	U_TX7 : test_tx_msm6258
 	port map(
 		reset		=> pcmreset_sig,
-		clk			=> clk_8m19_sig,
-		clk_ena		=> ckena_4m09_reg,
-		sam			=> "10",			-- 00:4.0k / 01:5.3kHz / 10:8.0kHz
+		clk			=> clk_7m98_sig,	-- ≒8.0MHz
+		clk_ena		=> '1',
+		sam			=> "10",			-- 00:7.8k / 01:10.4kHz / 10:15.6kHz
 		sync		=> open,
 		sigsel		=> '0',
 		pcm_ch		=> (others=>'0'),

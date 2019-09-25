@@ -5,6 +5,8 @@
 --     DATE   : 2016/10/07 -> 2016/10/07
 --            : 2016/10/07 (FIXED)
 --
+--     MODIFY : 2019/09/25
+--
 -- ===================================================================
 
 -- The MIT License (MIT)
@@ -38,8 +40,8 @@ entity test_tx_msm6258 is
 	port(
 		reset		: in  std_logic;
 		clk			: in  std_logic;
-		clk_ena		: in  std_logic;	-- typ 4.096MHz
-		sam			: in  std_logic_vector(1 downto 0);		-- 00:4.0k / 01:5.3kHz / 10:8.0kHz
+		clk_ena		: in  std_logic;	-- typ 8.0MHz(X68k)
+		sam			: in  std_logic_vector(1 downto 0);		-- 00:7.8kHz / 01:10.4kHz / 10:15.6kHz
 		sync		: out std_logic;
 
 		sigsel		: in  std_logic;						-- '1':external pcm / '0':internal signal
@@ -100,7 +102,7 @@ begin
 	-- 送信部 
 	----------------------------------------------
 
-	ch_input_sig <= pcm_ch_sig;
+	ch_input_sig <= not pcm_ch_sig(15) & pcm_ch_sig(14 downto 0);
 
 	process (clk, reset) begin
 		if (reset = '1') then
