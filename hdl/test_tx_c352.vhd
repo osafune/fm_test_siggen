@@ -1,11 +1,11 @@
 -- ===================================================================
--- TITLE : Test Transmitter (C140/C352 DAC output)
+-- TITLE : Test Transmitter (C352 DAC output)
 --
 --     DESIGN : S.OSAFUNE (J-7SYSTEM Works)
 --     DATE   : 2015/11/11 -> 2015/11/11
 --            : 2015/11/11 (FIXED)
 --
---     MODIFY : 2019/09/29 SYSTEM-IIボード評価用にL/Rを入れ替え
+--     MODIFY : 2019/09/29 C140から分離
 --
 -- ===================================================================
 
@@ -36,11 +36,11 @@ use IEEE.std_logic_1164.all;
 use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 
-entity test_tx_c140 is
+entity test_tx_c352 is
 	port(
 		reset		: in  std_logic;
 		clk			: in  std_logic;
-		clk_ena		: in  std_logic;	-- typ 4.608MHz(C140)
+		clk_ena		: in  std_logic;	-- typ 8.192MHz(C352)
 		sync		: out std_logic;
 
 		sigsel		: in  std_logic;						-- '1':external pcm / '0':internal signal
@@ -51,9 +51,9 @@ entity test_tx_c140 is
 		lrck		: out std_logic;
 		sdat		: out std_logic
 	);
-end test_tx_c140;
+end test_tx_c352;
 
-architecture RTL of test_tx_c140 is
+architecture RTL of test_tx_c352 is
 	signal clkcount			: integer range 0 to 5;
 	signal bitcount			: integer range 0 to 31;
 
@@ -98,10 +98,8 @@ begin
 		wavesqr_out	=> wavesqr_sig
 	);
 
---	pcm_ch1_sig <= pcm_ch1 when(sigsel = '1') else wavesin_sig;
---	pcm_ch2_sig <= pcm_ch2 when(sigsel = '1') else wavesqr_sig;
-	pcm_ch2_sig <= pcm_ch1 when(sigsel = '1') else wavesin_sig;
-	pcm_ch1_sig <= pcm_ch2 when(sigsel = '1') else wavesqr_sig;
+	pcm_ch1_sig <= pcm_ch1 when(sigsel = '1') else wavesin_sig;
+	pcm_ch2_sig <= pcm_ch2 when(sigsel = '1') else wavesqr_sig;
 
 
 

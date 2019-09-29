@@ -5,7 +5,7 @@
 --     DATE   : 2015/11/05 -> 2015/11/11
 --            : 2015/11/11 (FIXED)
 --
---     UPDATE : 2019/09/25
+--     UPDATE : 2019/09/29
 --
 -- ===================================================================
 
@@ -189,7 +189,7 @@ architecture RTL of test_tx_top is
 	port(
 		reset		: in  std_logic;
 		clk			: in  std_logic;
-		clk_ena		: in  std_logic;	-- typ 8.192MHz(C352)/4.608MHz(C140)
+		clk_ena		: in  std_logic;	-- typ 4.608MHz(C140)
 		sync		: out std_logic;
 
 		sigsel		: in  std_logic;						-- '1':external pcm / '0':internal signal
@@ -204,6 +204,24 @@ architecture RTL of test_tx_top is
 	signal c140_bclk_sig	: std_logic;
 	signal c140_lrck_sig	: std_logic;
 	signal c140_sdat_sig	: std_logic;
+
+
+	component test_tx_c352 is
+	port(
+		reset		: in  std_logic;
+		clk			: in  std_logic;
+		clk_ena		: in  std_logic;	-- typ 8.192MHz(C352)
+		sync		: out std_logic;
+
+		sigsel		: in  std_logic;						-- '1':external pcm / '0':internal signal
+		pcm_ch1		: in  std_logic_vector(15 downto 0);	-- L-ch
+		pcm_ch2		: in  std_logic_vector(15 downto 0);	-- R-ch
+
+		bclk		: out std_logic;
+		lrck		: out std_logic;
+		sdat		: out std_logic
+	);
+	end component;
 	signal c352_bclk_sig	: std_logic;
 	signal c352_lrck_sig	: std_logic;
 	signal c352_sdat_sig	: std_logic;
@@ -362,14 +380,14 @@ begin
 		clk			=> clk_4m61_sig,
 		clk_ena		=> '1',
 		sigsel		=> '0',
-		pcm_ch1		=> (others=>'0'),
+		pcm_ch1		=> (others=>'0'),	-- SYSTEM-IIではL/Rが入れ替わっている 
 		pcm_ch2		=> (others=>'0'),
 		bclk		=> c140_bclk_sig,
 		lrck		=> c140_lrck_sig,
 		sdat		=> c140_sdat_sig
 	);
 
-	U_TX5 : test_tx_c140
+	U_TX5 : test_tx_c352
 	port map(
 		reset		=> pcmreset_sig,
 		clk			=> clk_8m19_sig,
