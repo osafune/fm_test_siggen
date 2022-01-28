@@ -21,7 +21,7 @@ FM音源IC/PCM音源ICの出力データを模擬するテスト信号ジェネ�
 再生信号の周波数はfs/110Hzになります。例えばYM2151模擬の場合、55.9kHz/110=508Hzの正弦波および矩形波が再生されます。同様に、C140模擬では24kHz/110=218Hzの音声信号となります。
 
 FM音源ICのDAC出力フォーマットについては下記の資料も参考ください。  
-[DAC出力フォーマット(pdf)](https://drive.google.com/file/d/0Bw0BfOQoAOEEZGhCTVQ1Wk13SzQ/view)
+[DAC出力フォーマット(pdf)](https://raw.githubusercontent.com/osafune/fm_test_siggen/doc/fmdac_output_format.pdf)
 
 
 ライセンス
